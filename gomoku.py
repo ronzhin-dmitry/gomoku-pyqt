@@ -7,7 +7,7 @@
 # ---------------------------------------------------------------------------
 # This is a simple gomoku engine embedded in class that you can play with (and certainly can win).
 # This AI simply predicts 3 next moves with some dummy evaluation function and selects the best from minimax with alpha/beta.
-# Current recursion depth is 3 and I did not manage to decrease it on pure python, still game AI is decent to play with.
+# Current recursion depth is 3 and I did not manage to increase it on pure python without major speed loss, still game AI is decent to play with.
 
 import numpy as np
 from tabulate import tabulate
@@ -19,8 +19,6 @@ class GomokuEngine:
     def __init__(self):
         self.board = np.full((15,15),-1, dtype=np.dtype(int)) #board to store moves. If user moves first: -1 - empty, 0 - user, 1 - AI
         self.positive_directions = [(0,1),(1,1),(1,0),(1,-1)] #direction vectors, that should be considered in evaluated multiplied by 1 and -1
-        self.negative_directions = [(0,-1),(-1,-1),(-1,0),(-1,1)]
-        self.all_directions = self.positive_directions + self.negative_directions
         self.ai_depth = 2 #number of moves to forecast during AI move
     
     def display_board_inpynb(self, warning = False, get_input = True): #useful for tests to work in jupyter
@@ -296,5 +294,4 @@ class GomokuEngine:
     
     def reset_board(self):
         self.board = np.full((15,15),-1, dtype=np.dtype(int))
-        self.cache = np.full((15,15,8), 0, dtype=np.dtype(int))
         return
