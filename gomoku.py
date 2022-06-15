@@ -24,15 +24,15 @@ class GomokuEngine:
         self.ai_depth = 2 #number of moves to forecast during AI move
     
     def display_board_inpynb(self, warning = False, get_input = True): #useful for tests to work in jupyter
-        board_to_show = self.board.copy()
-        for row in range(board_to_show.shape[0]):
-            for col in range(board_to_show.shape[1]):
-                if board_to_show[row,col] < 0:
-                    board_to_show[row,col] = "\x1b[37m" + str(row)+'-'+str(col)
-                elif board_to_show[row,col] == 0:
-                    board_to_show[row,col] = "\x1b[39m" + 'X'
-                elif board_to_show[row,col] == 1:
-                    board_to_show[row,col] = "\x1b[39m" + 'O'
+        board_to_show = [['' for _ in range(15)] for _ in range(15)]
+        for row in range(self.board.shape[0]):
+            for col in range(self.board.shape[1]):
+                if self.board[row,col] < 0:
+                    board_to_show[row][col] = "\x1b[37m" + str(row)+'-'+str(col)
+                elif self.board[row,col] == 0:
+                    board_to_show[row][col] = "\x1b[39m" + 'X'
+                elif self.board[row,col] == 1:
+                    board_to_show[row][col] = "\x1b[39m" + 'O'
         table = tabulate(board_to_show,tablefmt="plain",stralign="center")
         if warning:
             print('Wrong input! Please input cell coordinate in format "i-j" like in gray cells.')
@@ -269,26 +269,27 @@ class GomokuEngine:
                 warning_message = False
                 user_input = (-1,-1)
                 while not good_input:
-                    user_input = self.display_board(warning_message, True)
+                    user_input = self.display_board_inpynb(warning_message, True)
                     if(len(user_input) == 2 and int(user_input[0]) >= 0 and int(user_input[0]) <= 14 and int(user_input[1]) >= 0 and int(user_input[1]) <= 14):
                         good_input = True
                         cur_move = (int(user_input[0]), int(user_input[1]))
                         move_hint = cur_move
                         self.board[cur_move] = cur_turn
-                        last_eval = self.evaluate(cur_move)
+                        last_eval = self.evaluate([cur_move])
                     else:
                         warning_message = True
             move_counter += 1
             if last_eval == float('inf'):
-                self.display_board(False,False)
+                self.display_board_inpynb(False,False)
                 print('USER WINS, GAME OVER')
                 game_over = True
             if last_eval == -1 * float('inf'):
-                self.display_board(False,False)
+                self.display_board_inpynb(False,False)
                 print('AI WINS, GAME OVER')
                 game_over = True
             cur_turn = (cur_turn + 1) % 2
             if move_counter == board_size and not game_over:
+                self.display_board_inpynb(False,False)
                 print('TIE, GAME OVER')
                 game_over = True
         return
