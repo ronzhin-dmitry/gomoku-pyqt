@@ -67,10 +67,12 @@ class Window(QtWidgets.QWidget):
                 winner_message = 'User wins'
                 self.game_over = True
                 self.restart_dialogue(winner_message)
+                return
             if self.move_count == 225:
                 winner_message = 'Tie'
                 self.game_over = True
                 self.restart_dialogue(winner_message)
+                return
             if not self.game_over:
                 last_eval, last_ai_move = self.game_engine.ai_move(self.ai_depth, self.ai_turn, self.move_hint)
                 self.move_count += 1
@@ -79,6 +81,7 @@ class Window(QtWidgets.QWidget):
                     winner_message = 'AI wins'
                     self.game_over = True
                     self.restart_dialogue(winner_message)
+                    return
     
 
     def restart_dialogue(self, winner_message):
